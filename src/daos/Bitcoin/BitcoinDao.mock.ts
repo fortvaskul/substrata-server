@@ -15,9 +15,9 @@ class BitcoinDao extends MockDaoMock implements IBitcoinDao {
     }
 
 
-    public async update(bitcoin: IBitcoin): Promise<IBitcoin> {
+    public async update(bitcoin: IBitcoin): Promise<IBitcoin | null> {
         const db = await super.openDb();
-        if (bitcoin.price < 0) throw new Error('Price must be greater than 0');
+        if (bitcoin.price < 0) return null;
         db.bitcoin[0].price = this.roundTo(bitcoin.price);
         db.bitcoin[0].updatedAt = new Date().toISOString();
         await super.saveDb(db);

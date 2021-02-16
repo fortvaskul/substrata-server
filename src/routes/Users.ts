@@ -48,29 +48,44 @@ router.put('/:id', async (req: IUserRequest, res: Response) => {
         });
     }
     const user = await userDao.update(+req.params.id, req.body);
-  return res.status(OK).json(user);
+    if (user) {
+      return res.status(OK).json(user);
+    } else {
+      logger.err('User does not exist');
+      return res.status(NOT_FOUND).send();
+    }
 });
 
 router.post('/:userId/usd', async (req: IMoneyUSDRequest, res: Response) => {
-  const { action, amount } = req.body;
-  if (!action || !amount) {
-    return res.status(BAD_REQUEST).json({
-      error: paramMissingError,
-    });
-  }
-  const user = await userDao.updateUSD(+req.params.userId, req.body);
-  return res.status(OK).json(user);
+    const { action, amount } = req.body;
+    if (!action || !amount) {
+      return res.status(BAD_REQUEST).json({
+        error: paramMissingError,
+      });
+    }
+    const user = await userDao.updateUSD(+req.params.userId, req.body);
+    if (user) {
+      return res.status(OK).json(user);
+    } else {
+      logger.err('User does not exist or have insufficient funds');
+      return res.status(NOT_FOUND).send();
+    }
 });
 
 router.post('/:userId/bitcoins', async (req: IMoneyBitcoinsRequest, res: Response) => {
-  const { action, amount } = req.body;
-  if (!action || !amount) {
-    return res.status(BAD_REQUEST).json({
-      error: paramMissingError,
-    });
-  }
-  const user = await userDao.updateBitcoins(+req.params.userId, req.body);
-  return res.status(OK).json(user);
+    const { action, amount } = req.body;
+    if (!action || !amount) {
+      return res.status(BAD_REQUEST).json({
+        error: paramMissingError,
+      });
+    }
+    const user = await userDao.updateBitcoins(+req.params.userId, req.body);
+    if (user) {
+      return res.status(OK).json(user);
+    } else {
+      logger.err('User does not exist or have insufficient funds');
+      return res.status(NOT_FOUND).send();
+    }
 });
 
 router.get('/:userId/balance', async (req: Request, res: Response) => {

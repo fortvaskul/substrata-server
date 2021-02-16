@@ -10,7 +10,7 @@ import {
 
 const router = Router();
 const bitcoinDao = new BitcoinDao();
-const { BAD_REQUEST, OK, NOT_FOUND } = StatusCodes;
+const { BAD_REQUEST, OK } = StatusCodes;
 
 router.get('/', async (req: Request, res: Response) => {
     const bitcoin = await bitcoinDao.get();
@@ -25,7 +25,12 @@ router.put('/', async (req: IBitcoinRequest, res: Response) => {
         });
     }
     const bitcoin = await bitcoinDao.update(req.body);
-  return res.status(OK).json(bitcoin);
+    if (bitcoin) {
+      return res.status(OK).json(bitcoin);
+    } else {
+      logger.err('Price must be greater than 0');
+      return res.status(BAD_REQUEST).send();
+    }
 });
 
 export default router;

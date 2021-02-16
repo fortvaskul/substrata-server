@@ -53,7 +53,7 @@ class UserDao extends MockDaoMock implements IUserDao {
                 return db.users[i];
             }
         }
-        throw new Error('User not found');
+        return null;
     }
     
     
@@ -64,7 +64,7 @@ class UserDao extends MockDaoMock implements IUserDao {
                 if (moneyUSD.action === "withdraw") {
                   const newBalance =
                     this.roundTo(db.users[i].usdBalance - this.roundTo(moneyUSD.amount));
-                  if (newBalance < 0) throw new Error('The user does not have enough money');
+                  if (newBalance < 0) return null;
                   else db.users[i].usdBalance = newBalance;
                 } else {
                   db.users[i].usdBalance =
@@ -75,7 +75,7 @@ class UserDao extends MockDaoMock implements IUserDao {
                 return db.users[i];
             }
         }
-        throw new Error('User not found');
+        return null;
     }
     
     
@@ -89,7 +89,7 @@ class UserDao extends MockDaoMock implements IUserDao {
                 if (moneyBitcoins.action === "buy") {
                   const newUSDBalance =
                     this.roundTo(db.users[i].usdBalance - this.roundTo(bitcoinToUSD));
-                  if (newUSDBalance < 0) throw new Error('The user does not have enough money');
+                  if (newUSDBalance < 0) return null;
                   else {
                     db.users[i].bitcoinAmount =
                       this.roundTo(db.users[i].bitcoinAmount + this.roundTo(moneyBitcoins.amount));
@@ -98,7 +98,7 @@ class UserDao extends MockDaoMock implements IUserDao {
                 } else {
                   const newBitcoinAmount =
                     this.roundTo(db.users[i].bitcoinAmount - this.roundTo(moneyBitcoins.amount));
-                  if (newBitcoinAmount < 0) throw new Error('The user does not have enough money');
+                  if (newBitcoinAmount < 0) return null;
                   else {
                     db.users[i].bitcoinAmount = newBitcoinAmount;
                     db.users[i].usdBalance =
@@ -110,7 +110,7 @@ class UserDao extends MockDaoMock implements IUserDao {
                 return db.users[i];
             }
         }
-        throw new Error('User not found');
+      return null;
     }
   
     public async getBalanceById(userId: number): Promise<number | null> {
