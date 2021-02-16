@@ -98,7 +98,7 @@ class UserDao extends MockDaoMock implements IUserDao {
                 } else {
                   const newBitcoinAmount =
                     this.roundTo(db.users[i].bitcoinAmount - this.roundTo(moneyBitcoins.amount));
-                  if (newBitcoinAmount < 0) new Error('The user does not have enough money');
+                  if (newBitcoinAmount < 0) throw new Error('The user does not have enough money');
                   else {
                     db.users[i].bitcoinAmount = newBitcoinAmount;
                     db.users[i].usdBalance =

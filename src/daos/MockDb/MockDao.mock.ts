@@ -1,9 +1,11 @@
 import jsonfile from 'jsonfile';
 import { IUser } from '@entities/User';
+import { IBitcoin } from '@entities/Bitcoin';
 
 
 interface IDatabase {
     users: IUser[];
+    bitcoin: IBitcoin[];
 }
 
 
