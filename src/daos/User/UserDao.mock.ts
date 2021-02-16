@@ -6,10 +6,10 @@ import MockDaoMock from '../MockDb/MockDao.mock';
 class UserDao extends MockDaoMock implements IUserDao {
 
 
-    public async getOne(email: string): Promise<IUser | null> {
+    public async getOne(id: number): Promise<IUser | null> {
         const db = await super.openDb();
         for (const user of db.users) {
-            if (user.email === email) {
+            if (user.id === id) {
                 return user;
             }
         }
@@ -40,19 +40,6 @@ class UserDao extends MockDaoMock implements IUserDao {
         for (let i = 0; i < db.users.length; i++) {
             if (db.users[i].id === user.id) {
                 db.users[i] = user;
-                await super.saveDb(db);
-                return;
-            }
-        }
-        throw new Error('User not found');
-    }
-
-
-    public async delete(id: number): Promise<void> {
-        const db = await super.openDb();
-        for (let i = 0; i < db.users.length; i++) {
-            if (db.users[i].id === id) {
-                db.users.splice(i, 1);
                 await super.saveDb(db);
                 return;
             }

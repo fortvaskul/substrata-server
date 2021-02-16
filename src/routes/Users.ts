@@ -1,16 +1,28 @@
 import StatusCodes from 'http-status-codes';
 import { Request, Response, Router } from 'express';
+import logger from '@shared/Logger';
 
 import UserDao from '@daos/User/UserDao.mock';
 import { paramMissingError, IUserRequest } from '@shared/constants';
 
 const router = Router();
 const userDao = new UserDao();
-const { BAD_REQUEST, CREATED, OK } = StatusCodes;
+const { BAD_REQUEST, CREATED, OK, NOT_FOUND } = StatusCodes;
 
 router.get('/', async (req: Request, res: Response) => {
     const users = await userDao.getAll();
-    return res.status(OK).json({users});
+    return res.status(OK).json(users);
+});
+
+router.get('/:id', async (req: Request, res: Response) => {
+  const user = await userDao.getOne(+req.params.id);
+  if (user) {
+    return res.status(OK).json(user);
+  } else {
+    logger.err('User does not exist');
+    return res.status(NOT_FOUND).send();
+  }
+  
 });
 
 router.post('/', async (req: IUserRequest, res: Response) => {
