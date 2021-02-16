@@ -3,8 +3,6 @@ import { getRandomInt } from '@shared/functions';
 import { IUserDao } from './UserDao';
 import MockDaoMock from '../MockDb/MockDao.mock';
 
-
-
 class UserDao extends MockDaoMock implements IUserDao {
 
 
@@ -28,6 +26,10 @@ class UserDao extends MockDaoMock implements IUserDao {
     public async add(user: IUser): Promise<void> {
         const db = await super.openDb();
         user.id = getRandomInt();
+        user.bitcoinAmount = 0;
+        user.usdBalance = 0;
+        user.createdAt = new Date().toISOString();
+        user.updatedAt = new Date().toISOString();
         db.users.push(user);
         await super.saveDb(db);
     }

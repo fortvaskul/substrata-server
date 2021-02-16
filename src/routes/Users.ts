@@ -2,7 +2,7 @@ import StatusCodes from 'http-status-codes';
 import { Request, Response, Router } from 'express';
 
 import UserDao from '@daos/User/UserDao.mock';
-import { paramMissingError, IRequest } from '@shared/constants';
+import { paramMissingError, IUserRequest } from '@shared/constants';
 
 const router = Router();
 const userDao = new UserDao();
@@ -13,14 +13,14 @@ router.get('/', async (req: Request, res: Response) => {
     return res.status(OK).json({users});
 });
 
-router.post('/', async (req: IRequest, res: Response) => {
-    const { user } = req.body;
-    if (!user) {
+router.post('/', async (req: IUserRequest, res: Response) => {
+    const { name, username, email } = req.body;
+    if (!name || !username || !email) {
         return res.status(BAD_REQUEST).json({
             error: paramMissingError,
         });
     }
-    await userDao.add(user);
+    await userDao.add(req.body);
     return res.status(CREATED).end();
 });
 
@@ -30,15 +30,15 @@ router.post('/', async (req: IRequest, res: Response) => {
  *                       Update - "PUT /api/users/update"
  ******************************************************************************/
 
-router.put('/update', async (req: IRequest, res: Response) => {
-    const { user } = req.body;
-    if (!user) {
+router.put('/update', async (req: IUserRequest, res: Response) => {
+    const { name, username, email } = req.body;
+    if (!name || !username || !email) {
         return res.status(BAD_REQUEST).json({
             error: paramMissingError,
         });
     }
-    user.id = Number(user.id);
-    await userDao.update(user);
+    // user.id = Number(user.id);
+    // await userDao.update(user);
     return res.status(OK).end();
 });
 

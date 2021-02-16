@@ -1,19 +1,34 @@
 {
   "users": [
     {
+      "id": 159123164363,
       "name": "Sean Maxwell",
+      "username": "sean_maxwell",
       "email": "sean.maxwell@gmail.com",
-      "id": 159123164363
+      "bitcoinAmount": 5,
+      "usdBalance": 800,
+      "createdAt": "2021-01-03T00:12:01.000Z",
+      "updatedAt": "2021-01-04T00:12:01.000Z"
     },
     {
+      "id": 906524522143,
       "name": "Gordan Freeman",
+      "username": "gordan_freeman",
       "email": "gordan.freeman@halflife.com",
-      "id": 906524522143
+      "bitcoinAmount": 7,
+      "usdBalance": 400,
+      "createdAt": "2021-01-01T00:12:01.000Z",
+      "updatedAt": "2021-01-02T00:12:01.000Z"
     },
     {
+      "id": 357437875835,
       "name": "John Smith",
+      "username": "john_smith",
       "email": "jsmith@yahoo.com",
-      "id": 357437875835
+      "bitcoinAmount": 10,
+      "usdBalance": 2000,
+      "createdAt": "2021-01-05T00:12:01.000Z",
+      "updatedAt": "2021-01-06T00:12:01.000Z"
     }
   ]
 }
