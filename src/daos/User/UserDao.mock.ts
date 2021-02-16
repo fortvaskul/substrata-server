@@ -23,7 +23,7 @@ class UserDao extends MockDaoMock implements IUserDao {
     }
 
 
-    public async add(user: IUser): Promise<void> {
+    public async add(user: IUser): Promise<IUser | null> {
         const db = await super.openDb();
         user.id = getRandomInt();
         user.bitcoinAmount = 0;
@@ -32,16 +32,20 @@ class UserDao extends MockDaoMock implements IUserDao {
         user.updatedAt = new Date().toISOString();
         db.users.push(user);
         await super.saveDb(db);
+        return user;
     }
 
 
-    public async update(user: IUser): Promise<void> {
+    public async update(id: number, user: IUser): Promise<IUser | null> {
         const db = await super.openDb();
         for (let i = 0; i < db.users.length; i++) {
-            if (db.users[i].id === user.id) {
-                db.users[i] = user;
+            if (db.users[i].id === id) {
+                if (user.name) db.users[i].name = user.name;
+                if (user.username) db.users[i].username = user.username;
+                if (user.email) db.users[i].email = user.email;
+                db.users[i].updatedAt = new Date().toISOString();
                 await super.saveDb(db);
-                return;
+                return db.users[i];
             }
         }
         throw new Error('User not found');

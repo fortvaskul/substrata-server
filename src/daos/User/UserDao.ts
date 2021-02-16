@@ -5,8 +5,8 @@ import { IUser } from '@entities/User';
 export interface IUserDao {
     getOne: (id: number) => Promise<IUser | null>;
     getAll: () => Promise<IUser[]>;
-    add: (user: IUser) => Promise<void>;
-    update: (user: IUser) => Promise<void>;
+    add: (user: IUser) => Promise<IUser | null>;
+    update: (id: number, user: IUser) => Promise<IUser | null>;
 }
 
 class UserDao implements IUserDao {
@@ -34,9 +34,9 @@ class UserDao implements IUserDao {
      *
      * @param user
      */
-    public async add(user: IUser): Promise<void> {
+    public async add(user: IUser): Promise<IUser | null> {
          // TODO
-        return Promise.resolve(undefined);
+        return Promise.resolve(null);
     }
 
 
@@ -44,9 +44,9 @@ class UserDao implements IUserDao {
      *
      * @param user
      */
-    public async update(user: IUser): Promise<void> {
+    public async update(id: number, user: IUser): Promise<IUser | null> {
          // TODO
-        return Promise.resolve(undefined);
+        return Promise.resolve(null);
     }
 }
 

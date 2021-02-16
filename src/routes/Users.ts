@@ -22,7 +22,6 @@ router.get('/:id', async (req: Request, res: Response) => {
     logger.err('User does not exist');
     return res.status(NOT_FOUND).send();
   }
-  
 });
 
 router.post('/', async (req: IUserRequest, res: Response) => {
@@ -32,26 +31,19 @@ router.post('/', async (req: IUserRequest, res: Response) => {
             error: paramMissingError,
         });
     }
-    await userDao.add(req.body);
-    return res.status(CREATED).end();
+    const user = await userDao.add(req.body);
+    return res.status(OK).json(user);
 });
 
-
-
-/******************************************************************************
- *                       Update - "PUT /api/users/update"
- ******************************************************************************/
-
-router.put('/update', async (req: IUserRequest, res: Response) => {
+router.put('/:id', async (req: IUserRequest, res: Response) => {
     const { name, username, email } = req.body;
-    if (!name || !username || !email) {
+    if (!name && !username && !email) {
         return res.status(BAD_REQUEST).json({
             error: paramMissingError,
         });
     }
-    // user.id = Number(user.id);
-    // await userDao.update(user);
-    return res.status(OK).end();
+    const user = await userDao.update(+req.params.id, req.body);
+  return res.status(OK).json(user);
 });
 
 export default router;
