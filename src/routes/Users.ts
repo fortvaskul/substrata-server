@@ -3,11 +3,16 @@ import { Request, Response, Router } from 'express';
 import logger from '@shared/Logger';
 
 import UserDao from '@daos/User/UserDao.mock';
-import { paramMissingError, IUserRequest } from '@shared/constants';
+import {
+  paramMissingError,
+  IUserRequest,
+  IMoneyUSDRequest,
+  IMoneyBitcoinsRequest
+} from '@shared/constants';
 
 const router = Router();
 const userDao = new UserDao();
-const { BAD_REQUEST, CREATED, OK, NOT_FOUND } = StatusCodes;
+const { BAD_REQUEST, OK, NOT_FOUND } = StatusCodes;
 
 router.get('/', async (req: Request, res: Response) => {
     const users = await userDao.getAll();
@@ -43,6 +48,28 @@ router.put('/:id', async (req: IUserRequest, res: Response) => {
         });
     }
     const user = await userDao.update(+req.params.id, req.body);
+  return res.status(OK).json(user);
+});
+
+router.post('/:userId/usd', async (req: IMoneyUSDRequest, res: Response) => {
+  const { action, amount } = req.body;
+  if (!action || !amount) {
+    return res.status(BAD_REQUEST).json({
+      error: paramMissingError,
+    });
+  }
+  const user = await userDao.updateUSD(+req.params.userId, req.body);
+  return res.status(OK).json(user);
+});
+
+router.post('/:userId/bitcoins', async (req: IMoneyBitcoinsRequest, res: Response) => {
+  const { action, amount } = req.body;
+  if (!action || !amount) {
+    return res.status(BAD_REQUEST).json({
+      error: paramMissingError,
+    });
+  }
+  const user = await userDao.updateBitcoins(+req.params.userId, req.body);
   return res.status(OK).json(user);
 });
 
