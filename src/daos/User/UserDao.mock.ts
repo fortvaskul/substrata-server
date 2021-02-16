@@ -112,6 +112,18 @@ class UserDao extends MockDaoMock implements IUserDao {
         }
         throw new Error('User not found');
     }
+  
+    public async getBalanceById(userId: number): Promise<number | null> {
+      const db = await super.openDb();
+      for (const user of db.users) {
+        if (user.id === userId) {
+          const bitcoinToUSD =
+            this.roundTo(db.bitcoin[0].price * this.roundTo(user.bitcoinAmount));
+          return this.roundTo(user.usdBalance + this.roundTo(bitcoinToUSD));
+        }
+      }
+      return null;
+    }
 }
 
 export default UserDao;

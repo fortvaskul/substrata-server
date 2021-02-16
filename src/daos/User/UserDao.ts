@@ -8,6 +8,7 @@ export interface IUserDao {
     update: (id: number, user: IUser) => Promise<IUser | null>;
     updateUSD: (userId: number, moneyUSD: IMoneyUSD) => Promise<IUser | null>;
     updateBitcoins: (userId: number, moneyBitcoins: IMoneyBitcoins) => Promise<IUser | null>;
+    getBalanceById: (userId: number) => Promise<number | null>;
 }
 
 class UserDao implements IUserDao {
@@ -39,6 +40,11 @@ class UserDao implements IUserDao {
     
     public async updateBitcoins(userId: number,
                                 moneyBitcoins: IMoneyBitcoins): Promise<IUser | null> {
+         // TODO
+        return Promise.resolve(null);
+    }
+    
+    public async getBalanceById(userId: number): Promise<number | null> {
          // TODO
         return Promise.resolve(null);
     }
