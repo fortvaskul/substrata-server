@@ -10,7 +10,7 @@ Test project
 Run the follow commands
 
 ```
-$ git clone --single-branch --branch main https://github.com/mariefalco/substrata-server.git
+$ git clone https://github.com/mariefalco/substrata-server.git
 ```
 
 
