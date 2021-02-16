@@ -54,10 +54,4 @@ router.put('/update', async (req: IUserRequest, res: Response) => {
     return res.status(OK).end();
 });
 
-
-
-/******************************************************************************
- *                                     Export
- ******************************************************************************/
-
 export default router;
