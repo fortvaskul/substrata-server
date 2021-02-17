@@ -1,14 +1,10 @@
 import { IUser } from '@entities/User';
 import { IMoneyUSD, IMoneyBitcoins } from '@entities/Money';
-import { getRandomInt } from '@shared/functions';
+import { getRandomInt, roundTo } from '@shared/functions';
 import { IUserDao } from './UserDao';
 import MockDaoMock from '../MockDb/MockDao.mock';
 
 class UserDao extends MockDaoMock implements IUserDao {
-  
-    private roundTo(num: number) :number  {
-        return Math.round((+num + Number.EPSILON) * 100) / 100;
-    }
     
     
     public async getOne(id: number): Promise<IUser | null> {
@@ -63,12 +59,12 @@ class UserDao extends MockDaoMock implements IUserDao {
             if (db.users[i].id === userId) {
                 if (moneyUSD.action === "withdraw") {
                   const newBalance =
-                    this.roundTo(db.users[i].usdBalance - this.roundTo(moneyUSD.amount));
+                    roundTo(db.users[i].usdBalance - roundTo(moneyUSD.amount));
                   if (newBalance < 0) return null;
                   else db.users[i].usdBalance = newBalance;
                 } else {
                   db.users[i].usdBalance =
-                    this.roundTo(db.users[i].usdBalance + this.roundTo(moneyUSD.amount));
+                    roundTo(db.users[i].usdBalance + roundTo(moneyUSD.amount));
                 }
                 db.users[i].updatedAt = new Date().toISOString();
                 await super.saveDb(db);
@@ -85,24 +81,24 @@ class UserDao extends MockDaoMock implements IUserDao {
         for (let i = 0; i < db.users.length; i++) {
             if (db.users[i].id === userId) {
               const bitcoinToUSD =
-                this.roundTo(db.bitcoin[0].price * this.roundTo(moneyBitcoins.amount));
+                roundTo(db.bitcoin[0].price * roundTo(moneyBitcoins.amount));
                 if (moneyBitcoins.action === "buy") {
                   const newUSDBalance =
-                    this.roundTo(db.users[i].usdBalance - this.roundTo(bitcoinToUSD));
+                    roundTo(db.users[i].usdBalance - roundTo(bitcoinToUSD));
                   if (newUSDBalance < 0) return null;
                   else {
                     db.users[i].bitcoinAmount =
-                      this.roundTo(db.users[i].bitcoinAmount + this.roundTo(moneyBitcoins.amount));
+                      roundTo(db.users[i].bitcoinAmount + roundTo(moneyBitcoins.amount));
                     db.users[i].usdBalance = newUSDBalance;
                   }
                 } else {
                   const newBitcoinAmount =
-                    this.roundTo(db.users[i].bitcoinAmount - this.roundTo(moneyBitcoins.amount));
+                    roundTo(db.users[i].bitcoinAmount - roundTo(moneyBitcoins.amount));
                   if (newBitcoinAmount < 0) return null;
                   else {
                     db.users[i].bitcoinAmount = newBitcoinAmount;
                     db.users[i].usdBalance =
-                      this.roundTo(db.users[i].usdBalance + this.roundTo(bitcoinToUSD));
+                      roundTo(db.users[i].usdBalance + roundTo(bitcoinToUSD));
                   }
                 }
                 db.users[i].updatedAt = new Date().toISOString();
@@ -118,8 +114,8 @@ class UserDao extends MockDaoMock implements IUserDao {
       for (const user of db.users) {
         if (user.id === userId) {
           const bitcoinToUSD =
-            this.roundTo(db.bitcoin[0].price * this.roundTo(user.bitcoinAmount));
-          return this.roundTo(user.usdBalance + this.roundTo(bitcoinToUSD));
+            roundTo(db.bitcoin[0].price * roundTo(user.bitcoinAmount));
+          return roundTo(user.usdBalance + roundTo(bitcoinToUSD));
         }
       }
       return null;

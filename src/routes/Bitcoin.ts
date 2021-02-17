@@ -2,6 +2,7 @@ import StatusCodes from 'http-status-codes';
 import { Request, Response, Router } from 'express';
 import logger from '@shared/Logger';
 
+import { validatePrice } from "@shared/validation";
 import BitcoinDao from '@daos/Bitcoin/BitcoinDao.mock';
 import {
   paramMissingError,

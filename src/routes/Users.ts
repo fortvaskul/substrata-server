@@ -90,7 +90,7 @@ router.post('/:userId/bitcoins', async (req: IMoneyBitcoinsRequest, res: Respons
 
 router.get('/:userId/balance', async (req: Request, res: Response) => {
   const balance = await userDao.getBalanceById(+req.params.userId);
-  if (balance) {
+  if (typeof balance === "number") {
     return res.status(OK).json({ balance });
   } else {
     logger.err('User does not exist');
