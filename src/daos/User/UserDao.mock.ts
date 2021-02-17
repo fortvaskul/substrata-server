@@ -14,7 +14,7 @@ class UserDao extends MockDaoMock implements IUserDao {
                 return user;
             }
         }
-        return null;
+        throw new Error('User does not exist');
     }
 
 
@@ -49,7 +49,7 @@ class UserDao extends MockDaoMock implements IUserDao {
                 return db.users[i];
             }
         }
-        return null;
+        throw new Error('User does not exist');
     }
     
     
@@ -60,7 +60,7 @@ class UserDao extends MockDaoMock implements IUserDao {
                 if (moneyUSD.action === "withdraw") {
                   const newBalance =
                     roundTo(db.users[i].usdBalance - roundTo(moneyUSD.amount));
-                  if (newBalance < 0) return null;
+                  if (newBalance < 0) throw new Error('User have insufficient funds');
                   else db.users[i].usdBalance = newBalance;
                 } else {
                   db.users[i].usdBalance =
@@ -71,7 +71,7 @@ class UserDao extends MockDaoMock implements IUserDao {
                 return db.users[i];
             }
         }
-        return null;
+        throw new Error('User does not exist');
     }
     
     
@@ -85,7 +85,7 @@ class UserDao extends MockDaoMock implements IUserDao {
                 if (moneyBitcoins.action === "buy") {
                   const newUSDBalance =
                     roundTo(db.users[i].usdBalance - roundTo(bitcoinToUSD));
-                  if (newUSDBalance < 0) return null;
+                  if (newUSDBalance < 0) throw new Error('User have insufficient funds');
                   else {
                     db.users[i].bitcoinAmount =
                       roundTo(db.users[i].bitcoinAmount + roundTo(moneyBitcoins.amount));
@@ -94,7 +94,7 @@ class UserDao extends MockDaoMock implements IUserDao {
                 } else {
                   const newBitcoinAmount =
                     roundTo(db.users[i].bitcoinAmount - roundTo(moneyBitcoins.amount));
-                  if (newBitcoinAmount < 0) return null;
+                  if (newBitcoinAmount < 0) throw new Error('User have insufficient funds');
                   else {
                     db.users[i].bitcoinAmount = newBitcoinAmount;
                     db.users[i].usdBalance =
@@ -106,7 +106,7 @@ class UserDao extends MockDaoMock implements IUserDao {
                 return db.users[i];
             }
         }
-      return null;
+        throw new Error('User does not exist');
     }
   
     public async getBalanceById(userId: number): Promise<number | null> {
@@ -118,7 +118,7 @@ class UserDao extends MockDaoMock implements IUserDao {
           return roundTo(user.usdBalance + roundTo(bitcoinToUSD));
         }
       }
-      return null;
+      throw new Error('User does not exist');
     }
 }
 
