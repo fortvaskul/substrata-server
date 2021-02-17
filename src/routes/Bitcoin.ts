@@ -11,26 +11,40 @@ import {
 
 const router = Router();
 const bitcoinDao = new BitcoinDao();
-const { BAD_REQUEST, OK } = StatusCodes;
+const { BAD_REQUEST, OK, INTERNAL_SERVER_ERROR } = StatusCodes;
 
 router.get('/', async (req: Request, res: Response) => {
-    const bitcoin = await bitcoinDao.get();
-    return res.status(OK).json(bitcoin);
+    try {
+      logger.info('Trying to get bitcoin price from database');
+      const bitcoin = await bitcoinDao.get();
+      logger.info('Received bitcoin price from database');
+      return res.status(OK).json(bitcoin);
+    } catch (error) {
+      logger.err('Database Error: ' + error);
+      return res.status(INTERNAL_SERVER_ERROR).send();
+    }
 });
 
 router.put('/', async (req: IBitcoinRequest, res: Response) => {
-    const { price } = req.body;
-    if (!price) {
-        return res.status(BAD_REQUEST).json({
-            error: paramMissingError,
-        });
+    try {
+      logger.info('Trying to validate bitcoin price. Received: ' + req.body.price);
+      validatePrice(req.body.price);
+      logger.info('Validation of bitcoin price was successful');
+    } catch (error) {
+      logger.err('Validation Error: ' + error);
+      return res.status(BAD_REQUEST).json({
+        error: paramMissingError,
+      });
     }
-    const bitcoin = await bitcoinDao.update(req.body);
-    if (bitcoin) {
+
+    try {
+      logger.info('Trying to update bitcoin price in database');
+      const bitcoin = await bitcoinDao.update(req.body);
+      logger.info('Bitcoin price is updated in database.');
       return res.status(OK).json(bitcoin);
-    } else {
-      logger.err('Price must be greater than 0');
-      return res.status(BAD_REQUEST).send();
+    } catch (error) {
+      logger.err('Database Error: ' + error);
+      return res.status(INTERNAL_SERVER_ERROR).send();
     }
 });
 
